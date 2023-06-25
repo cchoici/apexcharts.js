@@ -1,0 +1,193 @@
+<title>Range Bar Chart</title>
+
+<chart>
+<options>
+chart: {
+  height: 400,
+  type: 'rangeBar',
+  zoom: {
+    enabled: true,
+    type: 'x',
+    autoScaleYaxis: true,
+    zoomedArea: {
+      fill: {
+        color: '#90CAF9',
+        opacity: 0.4,
+      },
+      stroke: {
+        color: '#0D47A1',
+        opacity: 0.4,
+        width: 1,
+      },
+    },
+  },
+},
+plotOptions: {
+  bar: {
+    horizontal: false,
+    // barHeight: 20,
+    columnWidth: 20,
+    rangeBarGroupRows: true,
+  },
+},
+ colors: [
+    '#acd4a3',
+    '#FF4560',
+    '#008FFB',
+    '#FEB019',
+    '#775DD0',
+    '#3F51B5',
+    '#546E7A',
+    '#D4526E',
+  ],
+  // fill: {
+  //   type: "solid"
+  // },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shade: 'light',
+      type: 'horizontal',
+      shadeIntensity: 0.2,
+      gradientToColors: undefined,
+      inverseColors: true,
+      opacityFrom: 1,
+      opacityTo: 1,
+      stops: [70, 0, 100, 100],
+    },
+  },
+  // xaxis: {
+  //   type: "datetime"
+  // },
+  xaxis: {
+    min: 0,
+    max: 24,
+  },
+  legend: {
+    position: 'top',
+    // horizontalAlign: "left"
+  },
+  tooltip: {
+    custom: function () {
+      // console.log(opts);
+      // const fromYear = new Date(opts.y1).getFullYear();
+      // const toYear = new Date(opts.y2).getFullYear();
+      // const values = opts.ctx.rangeBar.getTooltipValues(opts);
+
+      return '';
+    },
+  },
+</options>
+
+<series>
+[
+    {
+      name: 'NORMAL',
+      data: [
+        {
+          x: 'Station 1',
+          y: [0, 0],
+        },
+        {
+          x: 'Station 2',
+          y: [0, 0],
+        },
+        {
+          x: 'Station 3',
+          y: [0, 0],
+        },
+        {
+          x: 'Station 4',
+          y: [0, 0],
+        },
+        {
+          x: 'Station 1',
+          y: [0, 1],
+        },
+        {
+          x: 'Station 1',
+          y: [4, 12],
+        },
+        {
+          x: 'Station 2',
+          y: [12, 24],
+        },
+      ],
+    },
+    {
+      name: 'TROUBLE',
+      data: [
+        {
+          x: 'Station 1',
+          y: [1, 2],
+        },
+        {
+          x: 'Station 2',
+          y: [3, 4],
+        },
+      ],
+    },
+    {
+      name: 'PENDING',
+      data: [
+        {
+          x: 'Station 1',
+          y: [12, 24],
+        },
+        {
+          x: 'Station 2',
+          y: [1, 2],
+        },
+        {
+          x: 'Station 4',
+          y: [0, 3],
+        },
+      ],
+    },
+    {
+      name: 'STAND BY',
+      data: [
+        {
+          x: 'Station 2',
+          y: [0, 1],
+        },
+        {
+          x: 'Station 2',
+          y: [2, 3],
+        },
+      ],
+    },
+    {
+      name: 'LACK MATERIALS',
+      data: [
+        {
+          x: 'Station 3',
+          y: [0, 5],
+        },
+      ],
+    },
+    {
+      name: 'UNCONNECT',
+      data: [
+        {
+          x: 'Station 4',
+          y: [4, 7],
+        },
+      ],
+    },
+    {
+      name: 'CHANGE LINE',
+      data: [
+        {
+          x: 'Station 4',
+          y: [9, 12],
+        },
+        {
+          x: 'Station 3',
+          y: [12, 14],
+        },
+      ],
+    },
+  ]
+</series>
+</chart>

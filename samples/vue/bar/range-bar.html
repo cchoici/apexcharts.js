@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Range Bar Chart</title>
+
+    <link href="../../assets/styles.css" rel="stylesheet" />
+
+    <style>
+      
+        #chart {
+      max-width: 650px;
+      margin: 35px auto;
+    }
+      
+    </style>
+
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="../../../dist/apexcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+    
+
+    <script>
+      // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+      // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+      var _seed = 42;
+      Math.random = function() {
+        _seed = _seed * 16807 % 2147483647;
+        return (_seed - 1) / 2147483646;
+      };
+    </script>
+
+    
+  </head>
+
+  <body>
+    
+    <div id="app">
+      <div id="chart">
+      <apexchart type="rangeBar" height="400" width="1" :options="chartOptions" :series="series"></apexchart>
+    </div>
+    </div>
+
+    <!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+    <div id="html">
+      &lt;div id=&quot;chart&quot;&gt;
+        &lt;apexchart type=&quot;rangeBar&quot; height=&quot;400&quot; width=&quot;1&quot; :options=&quot;chartOptions&quot; :series=&quot;series&quot;&gt;&lt;/apexchart&gt;
+      &lt;/div&gt;
+    </div>
+
+    <script>
+      new Vue({
+        el: '#app',
+        components: {
+          apexchart: VueApexCharts,
+        },
+        data: {
+          
+          series: [
+              {
+                name: 'NORMAL',
+                data: [
+                  {
+                    x: 'Station 1',
+                    y: [0, 0],
+                  },
+                  {
+                    x: 'Station 2',
+                    y: [0, 0],
+                  },
+                  {
+                    x: 'Station 3',
+                    y: [0, 0],
+                  },
+                  {
+                    x: 'Station 4',
+                    y: [0, 0],
+                  },
+                  {
+                    x: 'Station 1',
+                    y: [0, 1],
+                  },
+                  {
+                    x: 'Station 1',
+                    y: [4, 12],
+                  },
+                  {
+                    x: 'Station 2',
+                    y: [12, 24],
+                  },
+                ],
+              },
+              {
+                name: 'TROUBLE',
+                data: [
+                  {
+                    x: 'Station 1',
+                    y: [1, 2],
+                  },
+                  {
+                    x: 'Station 2',
+                    y: [3, 4],
+                  },
+                ],
+              },
+              {
+                name: 'PENDING',
+                data: [
+                  {
+                    x: 'Station 1',
+                    y: [12, 24],
+                  },
+                  {
+                    x: 'Station 2',
+                    y: [1, 2],
+                  },
+                  {
+                    x: 'Station 4',
+                    y: [0, 3],
+                  },
+                ],
+              },
+              {
+                name: 'STAND BY',
+                data: [
+                  {
+                    x: 'Station 2',
+                    y: [0, 1],
+                  },
+                  {
+                    x: 'Station 2',
+                    y: [2, 3],
+                  },
+                ],
+              },
+              {
+                name: 'LACK MATERIALS',
+                data: [
+                  {
+                    x: 'Station 3',
+                    y: [0, 5],
+                  },
+                ],
+              },
+              {
+                name: 'UNCONNECT',
+                data: [
+                  {
+                    x: 'Station 4',
+                    y: [4, 7],
+                  },
+                ],
+              },
+              {
+                name: 'CHANGE LINE',
+                data: [
+                  {
+                    x: 'Station 4',
+                    y: [9, 12],
+                  },
+                  {
+                    x: 'Station 3',
+                    y: [12, 14],
+                  },
+                ],
+              },
+            ],
+          chartOptions: {
+            chart: {
+              height: 400,
+              type: 'rangeBar',
+              zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true,
+                zoomedArea: {
+                  fill: {
+                    color: '#90CAF9',
+                    opacity: 0.4,
+                  },
+                  stroke: {
+                    color: '#0D47A1',
+                    opacity: 0.4,
+                    width: 1,
+                  },
+                },
+              },
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                // barHeight: 20,
+                columnWidth: 20,
+                rangeBarGroupRows: true,
+              },
+            },
+             colors: [
+                '#acd4a3',
+                '#FF4560',
+                '#008FFB',
+                '#FEB019',
+                '#775DD0',
+                '#3F51B5',
+                '#546E7A',
+                '#D4526E',
+              ],
+              // fill: {
+              //   type: "solid"
+              // },
+              fill: {
+                type: 'gradient',
+                gradient: {
+                  shade: 'light',
+                  type: 'horizontal',
+                  shadeIntensity: 0.2,
+                  gradientToColors: undefined,
+                  inverseColors: true,
+                  opacityFrom: 1,
+                  opacityTo: 1,
+                  stops: [70, 0, 100, 100],
+                },
+              },
+              // xaxis: {
+              //   type: "datetime"
+              // },
+              xaxis: {
+                min: 0,
+                max: 24,
+              },
+              legend: {
+                position: 'top',
+                // horizontalAlign: "left"
+              },
+              tooltip: {
+                custom: function () {
+                  // console.log(opts);
+                  // const fromYear = new Date(opts.y1).getFullYear();
+                  // const toYear = new Date(opts.y2).getFullYear();
+                  // const values = opts.ctx.rangeBar.getTooltipValues(opts);
+            
+                  return '';
+                },
+              },
+          },
+          
+          
+        },
+        
+      })
+    </script>
+    
+  </body>
+</html>

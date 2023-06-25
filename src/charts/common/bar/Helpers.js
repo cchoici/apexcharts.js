@@ -100,7 +100,12 @@ export default class Helpers {
         ((xDivision / seriesLen) *
           parseInt(this.barCtx.barOptions.columnWidth, 10)) /
         100
-
+      console.log(
+        'xDivision: ',
+        w.globals.gridWidth,
+        '  ',
+        this.barCtx.visibleItems
+      )
       if (w.globals.isXNumeric) {
         // max barwidth should be equal to minXDiff to avoid overlap
         let xRatio = this.barCtx.xRatio
@@ -149,7 +154,7 @@ export default class Helpers {
       barHeight,
       barWidth,
       zeroH,
-      zeroW,
+      zeroW
     }
   }
 
@@ -230,7 +235,7 @@ export default class Helpers {
       fillConfig: w.config.series[i].data[j]?.fill,
       fillType: w.config.series[i].data[j]?.fill?.type
         ? w.config.series[i].data[j]?.fill.type
-        : w.config.fill.type,
+        : w.config.fill.type
     })
 
     return pathFill
@@ -315,7 +320,7 @@ export default class Helpers {
     realIndex,
     i,
     j,
-    w,
+    w
   }) {
     const graphics = new Graphics(this.barCtx.ctx)
     strokeWidth = Array.isArray(strokeWidth)
@@ -390,7 +395,7 @@ export default class Helpers {
 
     return {
       pathTo,
-      pathFrom,
+      pathFrom
     }
   }
 
@@ -404,7 +409,7 @@ export default class Helpers {
     realIndex,
     i,
     j,
-    w,
+    w
   }) {
     const graphics = new Graphics(this.barCtx.ctx)
     strokeWidth = Array.isArray(strokeWidth)
@@ -477,7 +482,7 @@ export default class Helpers {
     }
     return {
       pathTo,
-      pathFrom,
+      pathFrom
     }
   }
 
@@ -534,7 +539,7 @@ export default class Helpers {
           type === 'x'
             ? this.getXForValue(value, zeroW, false)
             : this.getYForValue(value, zeroH, false),
-        attrs,
+        attrs
       })
     }
     if (
@@ -555,13 +560,13 @@ export default class Helpers {
         strokeWidth: type === 'x' ? w.globals.markers.size[i] : 0,
         strokeDashArray: 0,
         strokeLineCap: 'round',
-        strokeColor: Array.isArray(colors[i]) ? colors[i][0] : colors[i],
+        strokeColor: Array.isArray(colors[i]) ? colors[i][0] : colors[i]
       }
 
       pushGoal(w.globals.seriesRangeStart[i][j], commonAttrs)
       pushGoal(w.globals.seriesRangeEnd[i][j], {
         ...commonAttrs,
-        strokeColor: Array.isArray(colors[i]) ? colors[i][1] : colors[i],
+        strokeColor: Array.isArray(colors[i]) ? colors[i][1] : colors[i]
       })
     }
     return goals
@@ -573,16 +578,16 @@ export default class Helpers {
     goalX,
     goalY,
     barWidth,
-    barHeight,
+    barHeight
   }) {
     let graphics = new Graphics(this.barCtx.ctx)
     const lineGroup = graphics.group({
-      className: 'apexcharts-bar-goals-groups',
+      className: 'apexcharts-bar-goals-groups'
     })
 
     lineGroup.node.classList.add('apexcharts-element-hidden')
     this.barCtx.w.globals.delayedElements.push({
-      el: lineGroup.node,
+      el: lineGroup.node
     })
 
     lineGroup.attr(
@@ -666,7 +671,7 @@ export default class Helpers {
       stroke: 'none',
       strokeWidth: 0,
       fillOpacity: 1,
-      classes: 'apexcharts-bar-shadows',
+      classes: 'apexcharts-bar-shadows'
     })
   }
 }

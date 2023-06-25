@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Range Bar Chart</title>
+
+    <link href="../../assets/styles.css" rel="stylesheet" />
+
+    <style>
+      
+        #chart {
+      max-width: 650px;
+      margin: 35px auto;
+    }
+      
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.28.0/ramda.min.js"></script>
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="../../../dist/apexcharts.js"></script>
+    
+
+    <script>
+      // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+      // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+      var _seed = 42;
+      Math.random = function() {
+        _seed = _seed * 16807 % 2147483647;
+        return (_seed - 1) / 2147483646;
+      };
+    </script>
+
+    
+  </head>
+
+  <body>
+     <div id="chart"></div>
+
+    <script type="module">
+      
+
+const MapStatus = new Map([
+  [0, ['NORMAL', '#acd4a3']],
+  [1, ['TROUBLE', '#FF4560']],
+  [2, ['PENDING', '#008FFB']],
+  [3, ['STAND BY', '#FEB019']],
+  [4, ['LACK MATERIALS', '#775DD0']],
+  [5, ['UNCONNECT', '#3F51B5']],
+  [6, ['CHANGE LINE', '#546E7A']],
+]);
+
+const MapItems = (() => {
+  const result = new Map();
+  for (let i = 0; i < 50; i++) {
+    result.set(i, `${Math.random() > 0.5 ? 'Station' : '機器設備'} ${i + 1}`);
+  }
+  return result;
+})();
+
+const MapRange = new Map([
+  ['min', +new Date("2023-06-25T00:00:00")],
+  ['max', +new Date("2023-06-25T24:00:00")],
+])
+const size = MapStatus.size;
+
+const randomInterval = (min = MapRange.get('min'), max = MapRange.get('max')) => {
+  const delta = Math.floor(Math.random() * (max - min));
+  return { min, delta };
+};
+
+const genSeries = () => {
+  const tstampMax = MapRange.get('max');
+  const tstamp23 = tstampMax - 60 * 60 *1000;
+  const transColData = (acc, curr) => {
+    let v;
+    do {
+      const { delta, min } = randomInterval(v);
+      v = min + delta + 1;
+      v = R.median([tstamp23, v, tstampMax]) === v ? tstampMax : v;
+      const { delta: idx } = randomInterval(0, size);
+      acc.push({ x: curr, status: MapStatus.get(idx)[0], y: [min, v] });
+    } while (v < tstampMax);
+    return acc;
+  };
+  const arr = Array.from(MapItems.values());
+  const groups = R.pipe(
+    R.reduce(transColData, []),
+    R.groupBy(R.prop('status')),
+  )(arr);
+
+  const transGroup = group => ({
+    name: group[0],
+    data: groups[group[0]] ?? [],
+  });
+  const d = Array.from(MapStatus.values()).map(transGroup);
+  /* for order by MapItems cols */
+  d[0].data = R.concat(R.map(x => ({ x, y: [0, 0] }))(arr))(d[0].data);
+  // d[d.length] = { name: '', data: R.map(x => ({ x, y: [24, 24] }))(arr) };
+  return d;
+};
+
+  var options = {
+    series: genSeries(),
+    chart: {
+    height: 400,
+    type: 'rangeBar',
+    zoom: {
+      enabled: true,
+      type: 'x',
+      autoScaleYaxis: true,
+      zoomedArea: {
+        fill: {
+          color: '#90CAF9',
+          opacity: 0.4,
+        },
+        stroke: {
+          color: '#0D47A1',
+          opacity: 0.4,
+          width: 1,
+        },
+      },
+    },
+  },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        // barHeight: 20,
+        columnWidth: 10,
+        rangeBarGroupRows: true,
+      },
+    },
+    colors: R.map(R.last)(Array.from(MapStatus.values())),
+    // fill: {
+    //   type: "solid"
+    // },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'light',
+        type: 'horizontal',
+        shadeIntensity: 0.2,
+        gradientToColors: undefined,
+        inverseColors: true,
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [50, 0, 100, 100],
+      },
+    },
+    // xaxis: {
+    //   type: "datetime"
+    // },
+    yaxis: {
+      // type: "datetime",
+      tickAmount: 6,
+      min: MapRange.get('min'),
+      max: MapRange.get('max'),
+      labels: {
+        formatter: function(value, opts) {
+          return new Date(value).getHours();
+          // return new Date(value).format('HH');
+          // return opts.dateFormatter(new Date(timestamp)).format("hh")
+        }
+      }
+    },
+    legend: {
+      position: 'top',
+      onItemClick: {
+        toggleDataSeries: false
+      },
+      // horizontalAlign: "left"
+    },
+    tooltip: {
+      custom: function (opts) {
+        const { seriesIndex, dataPointIndex, y1, y2, w } = opts;
+        var { x } = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+        
+        return `<div class="tooltip"><h5>${x} ${MapStatus.get(seriesIndex)[0]}</h5>${new Date(y1).toLocaleString()} - ${new Date(y2).toLocaleString()}</div>`;
+      },
+    },
+  };
+
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+      
+      
+  </script>
+
+    
+  </body>
+</html>

@@ -23,7 +23,7 @@ class RangeBar extends Bar {
     this.barHelpers.initVariables(series)
 
     let ret = graphics.group({
-      class: 'apexcharts-rangebar-series apexcharts-plot-series',
+      class: 'apexcharts-rangebar-series apexcharts-plot-series'
     })
 
     for (let i = 0; i < series.length; i++) {
@@ -41,7 +41,7 @@ class RangeBar extends Bar {
         class: `apexcharts-series`,
         seriesName: Utils.escapeString(w.globals.seriesNames[realIndex]),
         rel: i + 1,
-        'data:realIndex': realIndex,
+        'data:realIndex': realIndex
       })
 
       this.ctx.series.addCollapsedClassToSeries(elSeries, realIndex)
@@ -72,7 +72,7 @@ class RangeBar extends Bar {
       // eldatalabels
       let elDataLabelsWrap = graphics.group({
         class: 'apexcharts-datalabels',
-        'data:realIndex': realIndex,
+        'data:realIndex': realIndex
       })
 
       let elGoalsMarkers = graphics.group({
@@ -114,7 +114,7 @@ class RangeBar extends Bar {
               srty,
               barHeight,
               yDivision,
-              initPositions,
+              initPositions
             })
 
             barHeight = positions.barHeight
@@ -129,7 +129,7 @@ class RangeBar extends Bar {
             yDivision,
             y1,
             y2,
-            ...params,
+            ...params
           })
 
           barWidth = paths.barWidth
@@ -152,7 +152,7 @@ class RangeBar extends Bar {
               srtx,
               barWidth,
               xDivision,
-              initPositions,
+              initPositions
             })
 
             barWidth = positions.barWidth
@@ -165,7 +165,7 @@ class RangeBar extends Bar {
             barXPosition,
             zeroH,
             xDivision,
-            ...params,
+            ...params
           })
 
           barHeight = paths.barHeight
@@ -177,7 +177,7 @@ class RangeBar extends Bar {
           goalX: paths.goalX,
           goalY: paths.goalY,
           barHeight,
-          barWidth,
+          barWidth
         })
 
         if (barGoalLine) {
@@ -214,7 +214,7 @@ class RangeBar extends Bar {
           elDataLabelsWrap,
           elGoalsMarkers,
           visibleSeries: this.visibleI,
-          type: 'rangebar',
+          type: 'rangebar'
         })
       }
 
@@ -235,7 +235,7 @@ class RangeBar extends Bar {
     barWidth,
     yDivision,
     xDivision,
-    initPositions,
+    initPositions
   }) {
     const w = this.w
     let overlaps = []
@@ -303,7 +303,7 @@ class RangeBar extends Bar {
       barYPosition,
       barXPosition,
       barHeight,
-      barWidth,
+      barWidth
     }
   }
 
@@ -313,7 +313,7 @@ class RangeBar extends Bar {
     xDivision,
     barWidth,
     barXPosition,
-    zeroH,
+    zeroH
   }) {
     let w = this.w
 
@@ -349,7 +349,7 @@ class RangeBar extends Bar {
       realIndex: indexes.realIndex,
       i: realIndex,
       j,
-      w,
+      w
     })
 
     if (!w.globals.isXNumeric) {
@@ -363,7 +363,7 @@ class RangeBar extends Bar {
       x,
       y: y2,
       goalY: this.barHelpers.getGoalValues('y', null, zeroH, i, j),
-      barXPosition,
+      barXPosition
     }
   }
 
@@ -375,7 +375,7 @@ class RangeBar extends Bar {
     yDivision,
     barHeight,
     barYPosition,
-    zeroW,
+    zeroW
   }) {
     let w = this.w
 
@@ -394,7 +394,7 @@ class RangeBar extends Bar {
       i: indexes.realIndex,
       realIndex: indexes.realIndex,
       j: indexes.j,
-      w,
+      w
     })
 
     if (!w.globals.isXNumeric) {
@@ -413,7 +413,7 @@ class RangeBar extends Bar {
         indexes.realIndex,
         indexes.j
       ),
-      y,
+      y
     }
   }
 
@@ -421,7 +421,7 @@ class RangeBar extends Bar {
     const w = this.w
     return {
       start: w.globals.seriesRangeStart[i][j],
-      end: w.globals.seriesRangeEnd[i][j],
+      end: w.globals.seriesRangeEnd[i][j]
     }
   }
 }
