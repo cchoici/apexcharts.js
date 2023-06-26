@@ -7,7 +7,7 @@
     <title>Range Bar Chart</title>
 
     <link href="../../assets/styles.css" rel="stylesheet" />
-
+    <link href="../../assets/styles-custom.css" rel="stylesheet" />
     <style>
       
         #chart {
@@ -53,16 +53,17 @@
      <div id="chart"></div>
 
     <script type="module">
-      
+
+const STEP_RANGE = 60 * 1000; // 1 min
 
 const MapStatus = new Map([
-  [0, ['NORMAL', '#acd4a3']],
-  [1, ['TROUBLE', '#FF4560']],
-  [2, ['PENDING', '#008FFB']],
-  [3, ['STAND BY', '#FEB019']],
-  [4, ['LACK MATERIALS', '#775DD0']],
-  [5, ['UNCONNECT', '#3F51B5']],
-  [6, ['CHANGE LINE', '#546E7A']],
+  [0, { name: 'NORMAL', color: '#acd4a3' }],
+  [1, { name: 'TROUBLE', color: '#FF4560' }],
+  [2, { name: 'PENDING', color: '#008FFB' }],
+  [3, { name: 'STAND BY', color: '#FEB019' }],
+  [4, { name: 'LACK MATERIALS', color: '#775DD0' }],
+  [5, { name: 'UNCONNECT', color: '#3F51B5' }],
+  [6, { name: 'CHANGE LINE', color: '#546E7A' }],
 ]);
 
 const MapItems = (() => {
@@ -74,27 +75,31 @@ const MapItems = (() => {
 })();
 
 const MapRange = new Map([
-  ['min', +new Date("2023-06-25T00:00:00")],
-  ['max', +new Date("2023-06-25T24:00:00")],
-])
+  ['min', +new Date().getTime() - 1000 * 60 *60],
+  // ['median', +new Date('2023-06-25T12:00:00')],
+  ['max', +new Date().getTime()],
+]);
 const size = MapStatus.size;
 
-const randomInterval = (min = MapRange.get('min'), max = MapRange.get('max')) => {
+const randomInterval = (min, max = MapRange.get('max')) => {
   const delta = Math.floor(Math.random() * (max - min));
   return { min, delta };
 };
 
 const genSeries = () => {
   const tstampMax = MapRange.get('max');
-  const tstamp23 = tstampMax - 60 * 60 *1000;
+
   const transColData = (acc, curr) => {
-    let v;
+    let v = MapRange.get('min');
     do {
-      const { delta, min } = randomInterval(v);
-      v = min + delta + 1;
-      v = R.median([tstamp23, v, tstampMax]) === v ? tstampMax : v;
+      const { delta, min } = randomInterval(v, v + STEP_RANGE);
+      v = min + delta;
+      v =
+        R.median([tstampMax - STEP_RANGE, v, tstampMax]) === v ? tstampMax : v;
+      /* select which status */
       const { delta: idx } = randomInterval(0, size);
-      acc.push({ x: curr, status: MapStatus.get(idx)[0], y: [min, v] });
+
+      acc.push({ x: curr, status: MapStatus.get(idx).name, y: [min, v] });
     } while (v < tstampMax);
     return acc;
   };
@@ -103,101 +108,96 @@ const genSeries = () => {
     R.reduce(transColData, []),
     R.groupBy(R.prop('status')),
   )(arr);
+ 
+  const transGroup = ({ name }) => ({ name, data: groups[name] ?? [] });
 
-  const transGroup = group => ({
-    name: group[0],
-    data: groups[group[0]] ?? [],
-  });
   const d = Array.from(MapStatus.values()).map(transGroup);
   /* for order by MapItems cols */
   d[0].data = R.concat(R.map(x => ({ x, y: [0, 0] }))(arr))(d[0].data);
-  // d[d.length] = { name: '', data: R.map(x => ({ x, y: [24, 24] }))(arr) };
   return d;
 };
 
-  var options = {
-    series: genSeries(),
-    chart: {
+const options = {
+  series: genSeries(), // big data need inject...
+  chart: {
+    animations: {
+      enabled: false,
+    },
     height: 400,
     type: 'rangeBar',
-    zoom: {
-      enabled: true,
-      type: 'x',
-      autoScaleYaxis: true,
-      zoomedArea: {
-        fill: {
-          color: '#90CAF9',
-          opacity: 0.4,
-        },
-        stroke: {
-          color: '#0D47A1',
-          opacity: 0.4,
-          width: 1,
-        },
-      },
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: 10,
+      rangeBarGroupRows: true,
     },
   },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        // barHeight: 20,
-        columnWidth: 10,
-        rangeBarGroupRows: true,
-      },
+  colors: R.map(R.prop('color'))(Array.from(MapStatus.values())),
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shade: 'light',
+      type: 'horizontal',
+      shadeIntensity: 0.2,
+      gradientToColors: undefined,
+      inverseColors: true,
+      opacityFrom: 1,
+      opacityTo: 1,
+      stops: [50, 0, 100, 100],
     },
-    colors: R.map(R.last)(Array.from(MapStatus.values())),
-    // fill: {
-    //   type: "solid"
-    // },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shade: 'light',
-        type: 'horizontal',
-        shadeIntensity: 0.2,
-        gradientToColors: undefined,
-        inverseColors: true,
-        opacityFrom: 1,
-        opacityTo: 1,
-        stops: [50, 0, 100, 100],
-      },
+  },
+  grid: {
+    show: false,
+    row: {
+      colors: ['transparent', '#eee'],
+      opacity: 0.3,
     },
-    // xaxis: {
-    //   type: "datetime"
-    // },
-    yaxis: {
-      // type: "datetime",
-      tickAmount: 6,
-      min: MapRange.get('min'),
-      max: MapRange.get('max'),
-      labels: {
-        formatter: function(value, opts) {
-          return new Date(value).getHours();
-          // return new Date(value).format('HH');
-          // return opts.dateFormatter(new Date(timestamp)).format("hh")
-        }
-      }
+  },
+  xaxis: {
+    type: 'categories',
+    labels: {
+      show: true,
+      rotate: -75,
+      rotateAlways: true,
     },
-    legend: {
-      position: 'top',
-      onItemClick: {
-        toggleDataSeries: false
-      },
-      // horizontalAlign: "left"
+  },
+  yaxis: {
+    tickAmount: 6,
+    min: MapRange.get('min'),
+    max: MapRange.get('max'),
+    labels: {
+      formatter: value => `${new Date(value).getHours()}:${new Date(value).getMinutes()}`,
     },
-    tooltip: {
-      custom: function (opts) {
-        const { seriesIndex, dataPointIndex, y1, y2, w } = opts;
-        var { x } = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
-        
-        return `<div class="tooltip"><h5>${x} ${MapStatus.get(seriesIndex)[0]}</h5>${new Date(y1).toLocaleString()} - ${new Date(y2).toLocaleString()}</div>`;
-      },
+  },
+  legend: {
+    position: 'top',
+    onItemClick: {
+      toggleDataSeries: false,
     },
-  };
-
+  },
+  tooltip: {
+    custom: function (opts) {
+      const { seriesIndex, dataPointIndex, y1, y2, w } = opts;
+      var { x } = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+      const whichStatus = MapStatus.get(seriesIndex);
+      return `<div class="tooltip">
+        <h5>${x} - <span style="background-color:${
+        whichStatus.color
+      }"></span> ${whichStatus.name}</h5>
+        <p>${new Date(y1).toLocaleString()} - ${new Date(
+        y2,
+      ).toLocaleString()}</p>
+      </div>`;
+    },
+  },
+};
   var chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render();
-      
+  setTimeout(() => {
+    console.log('update');
+    chart.updateSeries(genSeries());    
+  },[5000]);
       
   </script>
 

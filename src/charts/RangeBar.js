@@ -1,4 +1,4 @@
-import Bar from './Bar'
+import BarRange from './BarRange'
 import Graphics from '../modules/Graphics'
 import Utils from '../utils/Utils'
 import DateTime from '../utils/DateTime'
@@ -9,7 +9,7 @@ import DateTime from '../utils/DateTime'
  * @module RangeBar
  **/
 
-class RangeBar extends Bar {
+class RangeBar extends BarRange {
   draw(series, seriesIndex) {
     let w = this.w
     let graphics = new Graphics(this.ctx)

@@ -8,10 +8,7 @@ body {
     height: 100vh;
     background: #f9f9f9;
 }
-#chart {
-    max-width: inherit !important;
-    padding-top: 50px !important;
-}
+
 #chart, .chart-box {
     padding-top: 20px;
     padding-left: 10px;
@@ -19,15 +16,6 @@ body {
     border: 1px solid #ddd;
     box-shadow: 0 22px 35px -16px rgba(0,0,0, 0.1);
 }
-.tooltip {
-    background: #fff;
-    padding: 4px 10px;
-}
-.tooltip h5 { margin: 0;}
-
-.apexcharts-toolbar {
-    margin-top: -30px;
-  }
 
 select.flat-select {
     -moz-appearance: none;

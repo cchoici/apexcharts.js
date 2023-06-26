@@ -49,7 +49,7 @@ class Bar {
     const ser = new Series(this.ctx)
     this.lastActiveBarSerieIndex = ser.getActiveConfigSeriesIndex('desc', [
       'bar',
-      'column',
+      'column'
     ])
 
     const barSeriesIndices = ser.getBarSeriesIndices()
@@ -85,7 +85,7 @@ class Bar {
     this.barHelpers.initVariables(series)
 
     let ret = graphics.group({
-      class: 'apexcharts-bar-series apexcharts-plot-series',
+      class: 'apexcharts-bar-series apexcharts-plot-series'
     })
 
     if (w.config.dataLabels.enabled) {
@@ -114,7 +114,7 @@ class Bar {
         class: `apexcharts-series`,
         rel: i + 1,
         seriesName: Utils.escapeString(w.globals.seriesNames[realIndex]),
-        'data:realIndex': realIndex,
+        'data:realIndex': realIndex
       })
 
       this.ctx.series.addCollapsedClassToSeries(elSeries, realIndex)
@@ -153,24 +153,24 @@ class Bar {
       // eldatalabels
       let elDataLabelsWrap = graphics.group({
         class: 'apexcharts-datalabels',
-        'data:realIndex': realIndex,
+        'data:realIndex': realIndex
       })
 
       w.globals.delayedElements.push({
-        el: elDataLabelsWrap.node,
+        el: elDataLabelsWrap.node
       })
       elDataLabelsWrap.node.classList.add('apexcharts-element-hidden')
 
       let elGoalsMarkers = graphics.group({
-        class: 'apexcharts-bar-goals-markers'        
+        class: 'apexcharts-bar-goals-markers'
       })
 
       let elBarShadows = graphics.group({
-        class: 'apexcharts-bar-shadows'        
+        class: 'apexcharts-bar-shadows'
       })
 
       w.globals.delayedElements.push({
-        el: elBarShadows.node,
+        el: elBarShadows.node
       })
       elBarShadows.node.classList.add('apexcharts-element-hidden')
 
@@ -183,19 +183,19 @@ class Bar {
             i,
             j,
             realIndex,
-            bc,
+            bc
           },
           x,
           y,
           strokeWidth,
-          elSeries,
+          elSeries
         }
         if (this.isHorizontal) {
           paths = this.drawBarPaths({
             ...pathsParams,
             barHeight,
             zeroW,
-            yDivision,
+            yDivision
           })
           barWidth = this.series[i][j] / this.invertedYRatio
         } else {
@@ -203,7 +203,7 @@ class Bar {
             ...pathsParams,
             xDivision,
             barWidth,
-            zeroH,
+            zeroH
           })
           barHeight = this.series[i][j] / this.yRatio[this.yaxisIndex]
         }
@@ -222,7 +222,7 @@ class Bar {
                 ? pathFill
                 : Utils.hexToRgba(w.globals.colors[i]),
             prevPaths: this.pathArr[this.pathArr.length - 1],
-            currPaths: paths,
+            currPaths: paths
           })
 
           if (barShadow) {
@@ -237,7 +237,7 @@ class Bar {
           goalX: paths.goalX,
           goalY: paths.goalY,
           barHeight,
-          barWidth,
+          barWidth
         })
 
         if (barGoalLine) {
@@ -272,7 +272,7 @@ class Bar {
           elGoalsMarkers,
           elBarShadows,
           visibleSeries: this.visibleI,
-          type: 'bar',
+          type: 'bar'
         })
       }
 
@@ -310,7 +310,7 @@ class Bar {
     elGoalsMarkers,
     elBarShadows,
     visibleSeries,
-    type,
+    type
   }) {
     const w = this.w
     const graphics = new Graphics(this.ctx)
@@ -348,7 +348,7 @@ class Bar {
       animationDelay: delay,
       initialSpeed: w.config.chart.animations.speed,
       dataChangeSpeed: w.config.chart.animations.dynamicAnimation.speed,
-      className: `apexcharts-${type}-area`,
+      className: `apexcharts-${type}-area`
     })
 
     renderedPath.attr('clip-path', `url(#gridRectMask${w.globals.cuid})`)
@@ -387,7 +387,7 @@ class Bar {
       barXPosition,
       barYPosition,
       renderedPath,
-      visibleSeries,
+      visibleSeries
     })
     if (dataLabelsObj.dataLabels !== null) {
       elDataLabelsWrap.add(dataLabelsObj.dataLabels)
@@ -417,7 +417,7 @@ class Bar {
     x,
     y,
     yDivision,
-    elSeries,
+    elSeries
   }) {
     let w = this.w
 
@@ -472,7 +472,7 @@ class Bar {
       realIndex: indexes.realIndex,
       i,
       j,
-      w,
+      w
     })
 
     if (!w.globals.isXNumeric) {
@@ -484,7 +484,7 @@ class Bar {
       i,
       y1: barYPosition - barHeight * this.visibleI,
       y2: barHeight * this.seriesLen,
-      elSeries,
+      elSeries
     })
 
     return {
@@ -495,7 +495,7 @@ class Bar {
       y,
       goalX: this.barHelpers.getGoalValues('x', zeroW, null, i, j),
       barYPosition,
-      barHeight,
+      barHeight
     }
   }
 
@@ -507,7 +507,7 @@ class Bar {
     barWidth,
     zeroH,
     strokeWidth,
-    elSeries,
+    elSeries
   }) {
     let w = this.w
 
@@ -566,7 +566,7 @@ class Bar {
       realIndex: indexes.realIndex,
       i,
       j,
-      w,
+      w
     })
 
     if (!w.globals.isXNumeric) {
@@ -579,7 +579,7 @@ class Bar {
       i,
       x1: barXPosition - strokeWidth / 2 - barWidth * this.visibleI,
       x2: barWidth * this.seriesLen + strokeWidth / 2,
-      elSeries,
+      elSeries
     })
 
     return {
@@ -589,7 +589,7 @@ class Bar {
       y,
       goalY: this.barHelpers.getGoalValues('y', null, zeroH, i, j),
       barXPosition,
-      barWidth,
+      barWidth
     }
   }
 

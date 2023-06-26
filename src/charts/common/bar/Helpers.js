@@ -92,6 +92,7 @@ export default class Helpers {
       y = (yDivision - barHeight * this.barCtx.seriesLen) / 2
     } else {
       // width divided into equal parts
+
       xDivision = w.globals.gridWidth / this.barCtx.visibleItems
       if (w.config.xaxis.convertedCatToNumeric) {
         xDivision = w.globals.gridWidth / w.globals.dataPoints
@@ -100,12 +101,7 @@ export default class Helpers {
         ((xDivision / seriesLen) *
           parseInt(this.barCtx.barOptions.columnWidth, 10)) /
         100
-      console.log(
-        'xDivision: ',
-        w.globals.gridWidth,
-        '  ',
-        this.barCtx.visibleItems
-      )
+
       if (w.globals.isXNumeric) {
         // max barwidth should be equal to minXDiff to avoid overlap
         let xRatio = this.barCtx.xRatio

@@ -1,0 +1,46 @@
+
+#chart {
+  max-width: inherit !important;
+  padding-top: 50px !important;
+}
+
+.apexcharts-tooltip {
+  border-radius: 0 !important;
+  box-shadow: 0 0 3px #aaa;
+  margin: 0 10px;
+}
+.tooltip {
+  background: #fff;
+ 
+}
+.tooltip h5 {
+  background:  linear-gradient(180deg, rgb(243, 243, 243) 80%, #fcfcfc);
+  margin: 0;
+  padding: 6px 10px;
+  display:flex;
+  align-items: center;
+  border-bottom: 1px #ccc solid;
+}
+/* .tooltip h5::after {
+  content: '';
+  position:absolute;
+  bottom:0;
+  right:0;
+  left:0;
+  border-bottom: 1px #fff solid;
+} */
+.tooltip h5 span {
+  display: inline-block;
+  border-radius: 5px;
+  width: 10px;
+  height: 10px;
+  margin: auto 5px;
+}
+.tooltip p {
+  margin: 0;
+  padding: 6px 10px;
+}
+.apexcharts-toolbar {
+  margin-top: -30px;
+}
+
