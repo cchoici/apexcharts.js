@@ -56,14 +56,20 @@
       ...
   ]
   */
-  function generateDayWiseTimeSeries(baseval, count, yrange) {
+  const MapRange = new Map([
+    ['min', +new Date().getTime() - 1000 * 60 *60 *24 * 5], // 5 days ago
+    ['max', +new Date().getTime()],
+  ]);
+  const randomInterval = (min = MapRange.get('min'), max = MapRange.get('max')) => {
+    const delta = Math.floor(Math.random() * (max - min));
+    return min + delta;
+  };
+  function genSeries(count, yrange) {
     var i = 0;
     var series = [];
     while (i < count) {
-      var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-  
-      series.push([baseval, y]);
-      baseval += 86400000;
+      var y = Math.random() * (yrange.max - yrange.min + 1) + yrange.min;
+      series.push( { x: randomInterval(), y });
       i++;
     }
     return series;
@@ -77,70 +83,86 @@
     <script>
       
         var options = {
-          series: [{
-            name: 'TEAM 1',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
-              min: 10,
-              max: 60
-            })
-          },
-          {
-            name: 'TEAM 2',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 20, {
-              min: 10,
-              max: 60
-            })
-          },
-          {
-            name: 'TEAM 3',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 30, {
-              min: 10,
-              max: 60
-            })
-          },
-          {
-            name: 'TEAM 4',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 10, {
-              min: 10,
-              max: 60
-            })
-          },
-          {
-            name: 'TEAM 5',
-            data: generateDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 30, {
-              min: 10,
-              max: 60
-            })
-          },
+          series: [
+            {
+              name: 'Mean',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: 0 }, {x: MapRange.get('max'), y: 0}]
+            },
+            {
+              name: 'Max',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: 1.5 }, {x: MapRange.get('max'), y: 1.5}]
+            },
+            {
+              name: 'Min',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: -1.5 }, {x: MapRange.get('max'), y: -1.5}]
+            },
+            {
+              name: 'Scatter',
+              type: 'scatter',
+              data: genSeries( 1000, { min: -2, max: 2 })
+            }, 
+         
         ],
-          chart: {
-          height: 350,
-          type: 'scatter',
+        chart: {
+          animations: {
+            enabled: false,
+          },
+          height: 400,
+          type: 'line', // required
           zoom: {
-            type: 'xy'
+            enabled: false
           }
         },
+        stroke: { width: 1.5 },
+        colors: ['#93cb82','#dc6767', '#dc6767', '#00adef'], // Mean, Max, Min, Scatter
+        markers: { // required
+          size: [4, 0]
+        },
+        
         dataLabels: {
           enabled: false
         },
         grid: {
           xaxis: {
             lines: {
-              show: true
+              show: false
             }
           },
           yaxis: {
             lines: {
-              show: true
+              show: false
             }
           },
         },
+        tooltip: {
+          shared: false,
+          intersect: true,
+        },
         xaxis: {
-          type: 'datetime',
+          type: 'numeric',
+          // tickAmount: 6,
+          min: MapRange.get('min'),
+          max: MapRange.get('max'),
+          labels: {
+            formatter: v => `${new Date(v).getMonth()+1}/${new Date(v).getDay()+1}/${new Date(v).getFullYear()}`,
+          }
         },
         yaxis: {
-          max: 70
-        }
+          min: -2,
+          max: 2,
+          labels: {
+            formatter: v => Math.floor(v),
+          },
+          axisBorder: {
+            show: true,
+            color: '#ccc',
+            offsetX: 0,
+            offsetY: 0
+          },
+        },
         };
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
