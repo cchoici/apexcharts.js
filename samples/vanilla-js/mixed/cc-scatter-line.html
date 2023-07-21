@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Timeline Scatter Chart</title>
+
+    <link href="../../assets/styles.css" rel="stylesheet" />
+    <link href="../../assets/styles-custom.css" rel="stylesheet" />
+    <style>
+      
+        #chart {
+      max-width: 650px;
+      margin: 35px auto;
+    }
+      
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.28.0/ramda.min.js"></script>
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="../../../dist/apexcharts.js"></script>
+    
+
+    <script>
+      // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+      // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+      var _seed = 42;
+      Math.random = function() {
+        _seed = _seed * 16807 % 2147483647;
+        return (_seed - 1) / 2147483646;
+      };
+    </script>
+
+    <script>
+  /*
+  // this function will generate output in this format
+  // data = [
+      [timestamp, 23],
+      [timestamp, 33],
+      [timestamp, 12]
+      ...
+  ]
+  */
+  const MapRange = new Map([
+    ['min', +new Date().getTime() - 1000 * 60 *60 *24 * 5], // 5 days ago
+    ['max', +new Date().getTime()],
+  ]);
+  const randomInterval = (min = MapRange.get('min'), max = MapRange.get('max')) => {
+    const delta = Math.floor(Math.random() * (max - min));
+    return min + delta;
+  };
+  const genAnnotation = ({ text, y, color }) => ({
+    y,
+    borderColor: color,
+    borderWidth: 2,
+    strokeDashArray: 4,
+    label: {
+      borderColor: 'transparent',
+      style: {
+        fontSize: '12px',
+        color,
+        background: 'transparent',
+      },
+      orientation: 'horizontal',
+      offsetX: 30,
+      offsetY: 0,
+      text
+    }
+  });
+  
+  function genSeries(count, yrange) {
+    var i = 0;
+    var series = [];
+    while (i < count) {
+      var y = Math.random() * (yrange.max - yrange.min + 1) + yrange.min;
+      series.push( { x: randomInterval(), y });
+      i++;
+    }
+    return series;
+  }
+  </script>
+  </head>
+
+  <body>
+     <div id="chart"></div>
+
+    <script>
+      
+        var options = {
+          series: [
+            {
+              name: 'Mean',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: 0 }, {x: MapRange.get('max'), y: 0}]
+            },
+            {
+              name: 'Max',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: 1.5 }, {x: MapRange.get('max'), y: 1.5}]
+            },
+            {
+              name: 'Min',
+              type: 'line',
+              data: [{ x: MapRange.get('min'), y: -1.5 }, {x: MapRange.get('max'), y: -1.5}]
+            },
+            {
+              name: 'Scatter',
+              type: 'scatter',
+              data: genSeries( 1000, { min: -2, max: 2 })
+            }, 
+         
+        ],
+        chart: {
+          animations: {
+            enabled: false,
+          },
+          height: 400,
+          type: 'scatter', // required
+          zoom: {
+            enabled: false
+          }
+        },
+        // stroke: { width: 1.5 },
+        colors: ['#93cb82','#dc6767', '#dc6767', '#00adef'], // Mean, Max, Min, Scatter
+        markers: { // required
+          size: [4, 4]
+        },
+        dataLabels: {
+          enabled: false
+        },
+        grid: {
+          xaxis: {
+            lines: {
+              show: false
+            }
+          },
+          yaxis: {
+            lines: {
+              show: false
+            }
+          },
+        },
+        tooltip: {
+          shared: false,
+          intersect: true,
+        },
+        xaxis: {
+          type: 'numeric',
+          // tickAmount: 6,
+          min: MapRange.get('min'),
+          max: MapRange.get('max'),
+          labels: {
+            formatter: v => `${new Date(v).getMonth()+1}/${new Date(v).getDay()+1}/${new Date(v).getFullYear()}`,
+          }
+        },
+        
+        yaxis: {
+          min: -2,
+          max: 2,
+          labels: {
+            formatter: v => Math.floor(v *10)/10,
+          },
+          axisBorder: {
+            show: true,
+            color: '#ccc',
+            offsetX: 0,
+            offsetY: 0
+          },
+        },
+        annotations: {
+          yaxis: [
+            genAnnotation({ text: 'Mean', y: 0, color: '#93cb82'}),
+            genAnnotation({ text: 'Maxinum', y: 1.5, color: '#dc6767'}),
+            genAnnotation({ text: 'Mininum', y: -1.5, color: '#dc6767'}),
+          ]
+        },
+      };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+      
+      
+    </script>
+
+    
+  </body>
+</html>

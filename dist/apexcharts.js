@@ -21720,8 +21720,8 @@
    *
    * @module RangeBar
    **/
-  var RangeBar = /*#__PURE__*/function (_BarRange) {
-    _inherits(RangeBar, _BarRange);
+  var RangeBar = /*#__PURE__*/function (_BarForCusRange) {
+    _inherits(RangeBar, _BarForCusRange);
     var _super = _createSuper(RangeBar);
     function RangeBar() {
       _classCallCheck(this, RangeBar);
@@ -21736,6 +21736,7 @@
         this.series = series;
         this.seriesRangeStart = w.globals.seriesRangeStart;
         this.seriesRangeEnd = w.globals.seriesRangeEnd;
+        console.log('range:', this.seriesRangeStart, ' to ', this.seriesRangeEnd);
         this.barHelpers.initVariables(series);
         var ret = graphics.group({
           class: 'apexcharts-rangebar-series apexcharts-plot-series'

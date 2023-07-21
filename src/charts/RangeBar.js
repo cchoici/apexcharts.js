@@ -1,4 +1,4 @@
-import BarRange from './BarRange'
+import BarForCusRange from './BarForCusRange'
 import Graphics from '../modules/Graphics'
 import Utils from '../utils/Utils'
 import DateTime from '../utils/DateTime'
@@ -9,7 +9,7 @@ import DateTime from '../utils/DateTime'
  * @module RangeBar
  **/
 
-class RangeBar extends BarRange {
+class RangeBar extends BarForCusRange {
   draw(series, seriesIndex) {
     let w = this.w
     let graphics = new Graphics(this.ctx)
@@ -19,7 +19,7 @@ class RangeBar extends BarRange {
     this.series = series
     this.seriesRangeStart = w.globals.seriesRangeStart
     this.seriesRangeEnd = w.globals.seriesRangeEnd
-
+    console.log('range:', this.seriesRangeStart, ' to ', this.seriesRangeEnd)
     this.barHelpers.initVariables(series)
 
     let ret = graphics.group({

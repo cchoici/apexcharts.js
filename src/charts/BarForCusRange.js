@@ -1,5 +1,5 @@
 import BarDataLabels from './common/bar/DataLabels'
-import BarHelpers from './common/bar/HelpersRange'
+import BarHelpers from './common/bar/HelpersForCusRange'
 import CoreUtils from '../modules/CoreUtils'
 import Utils from '../utils/Utils'
 import Filters from '../modules/Filters'

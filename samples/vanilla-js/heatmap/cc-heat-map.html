@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Simple HeatMap</title>
+
+    <link href="../../assets/styles.css" rel="stylesheet" />
+    <link href="../../assets/styles-custom.css" rel="stylesheet" />
+    <style>
+      
+        #chart {
+      max-width: 650px;
+      margin: 35px auto;
+    }
+      
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.28.0/ramda.min.js"></script>
+    <script>
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+        )
+      window.Promise ||
+        document.write(
+          '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+        )
+    </script>
+
+    
+    <script src="../../../dist/apexcharts.js"></script>
+    
+
+    <script>
+      // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+      // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+      var _seed = 42;
+      Math.random = function() {
+        _seed = _seed * 16807 % 2147483647;
+        return (_seed - 1) / 2147483646;
+      };
+    </script>
+
+    <script>
+  function genData(count, range = { min: 0, max: 1 }) {
+    var i = 0;
+    var series = [];
+    while (i < count) {
+      var x = `Station ${(i + 1).toString()}`;
+      var y = Math.random() * (range.max - range.min) >= 0.5 ? 1 : 0;
+      series.push({ x, y });
+      i++;
+    }
+    return series;
+  }
+  </script>
+  </head>
+
+  <body>
+     <div id="chart" />
+
+    <script>
+      
+      var options = {
+        series: [{
+          name: 'Station 1',
+          data: genData(5)
+        },
+        {
+          name: 'Station 2',
+          data: genData(5)
+        },
+        {
+          name: 'Station 3',
+          data: genData(5)
+        },
+        {
+          name: 'Station 4',
+          data: genData(5)
+        },
+        {
+          name: 'Station 5',
+          data: genData(5)
+        },
+       
+        ],
+        chart: {
+          height: 350,
+          type: 'heatmap',
+          toolbar: {
+            show: false,
+          },
+        },
+        plotOptions: {
+          heatmap: {
+            radius: 5,
+            enableShades: false,
+            shadeIntensity: 0,
+            useFillColorAsStroke: false,
+            colorScale: {
+              ranges: [{
+                  from: 0,
+                  to: 0,
+                  name: 'Normal',
+                  color: '#eee'
+                },
+                {
+                  from: 1,
+                  to: 1,
+                  name: 'Alert',
+                  color: '#00adef'
+                },
+                
+              ]
+            }
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+      
+      
+    </script>
+
+    
+  </body>
+</html>
